@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Coaching Sim</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Club Header -->
+    <header class="club-header">
+        <h1>🛡️ AFC Phoenix</h1>
+        <button onclick="document.getElementById('league-modal').style.display='flex'" class="btn-league">🏆 View League Table</button>
+    </header>
+
+    <div class="game-layout">
+        <!-- Left Column: Tactical Board -->
+        <div class="tactics-container">
+            <h2>Tactical Board</h2>
+            <canvas id="pitchCanvas" width="800" height="500"></canvas>
+            
+            <div class="controls">
+                <label style="margin-right: 15px; cursor: pointer;">
+                    <input type="radio" name="drawMode" value="run" checked> 🏃‍♂️ Player Run
+                </label>
+                <label style="margin-right: 15px; cursor: pointer;">
+                    <input type="radio" name="drawMode" value="pass"> ⚽ Passing Lane
+                </label>
+                <button id="clearBoard">Clear</button>
+            </div>
+            
+            <div class="phase-controls">
+                <strong>Phases:</strong>
+                <button id="savePhase1">Save P1</button>
+                <button id="loadPhase1">Load P1</button>
+                <span style="margin: 0 10px;">|</span>
+                <button id="savePhase2">Save P2</button>
+                <button id="loadPhase2">Load P2</button>
+            </div>
+        </div>
+
+        <!-- Right Column: Roster -->
+        <div class="roster-container">
+            <h2>Locker Room</h2>
+            <div id="squad-list">
+                <!-- Player cards injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Manager's Office Section -->
+    <div class="calendar-container">
+        <h2>Manager's Office: Week <span id="week-counter">1</span></h2>
+        
+        <div class="status-bar">
+            <p>Days left: <span id="days-left">5</span></p>
+            <p>Energy: <span id="coach-energy">100</span>%</p>
+            <p>Prep: <span id="team-prep">50</span>%</p>
+            <p>Board Trust: <span id="board-confidence">75</span>%</p>
+        </div>
+        
+        <div class="office-dashboards">
+            <div class="dash-panel board-panel">
+                <strong>👔 Board:</strong> <span id="board-mandate">Loading...</span>
+            </div>
+            <div class="dash-panel staff-panel">
+                <strong>📋 Next Opponent:</strong> <span id="next-opponent">Loading...</span>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button onclick="takeAction('tactics')">📋 Drill (-25 En, +Prep)</button>
+            <button onclick="takeAction('meeting')">💬 Meeting (-15 En, +Happy)</button>
+            <button onclick="takeAction('media')">🎙️ Press (-10 En)</button>
+            <button onclick="takeAction('rest')">☕ Rest (+45 En)</button>
+        </div>
+        
+        <div id="calendar-log" class="event-log">
+            <p>> A new week begins. The board expects results.</p>
+        </div>
+    </div>
+
+    <!-- Modals (Hidden by default with inline styles) -->
+    <div id="media-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>🎙️ Press Room</h2>
+            <p id="media-question">"Question goes here..."</p>
+            <div id="media-options"></div>
+        </div>
+    </div>
+
+    <div id="league-modal" class="modal" style="display: none;">
+        <div class="modal-content league-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>🏆 National League (Matchday <span id="matchday-counter">0</span>)</h2>
+                <button onclick="document.getElementById('league-modal').style.display='none'" style="background: red;">Close</button>
+            </div>
+            <table class="league-table" id="league-table-ui">
+                <!-- Table injected by JS -->
+            </table>
+            <div class="league-legend">
+                <span style="color: #4caf50;">■ Champions League</span>
+                <span style="color: #ffeb3b; margin: 0 15px;">■ Conference League</span>
+                <span style="color: #f44336;">■ Relegation</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Day Dashboard (Hidden by default with inline styles) -->
+    <div id="match-day-panel" class="modal" style="display: none; background: rgba(0,0,0,0.95);">
+        <div class="modal-content" style="width: 800px; border-top: 5px solid #ffeb3b;">
+            <h2>⚽ Match Day! ⚽</h2>
+            <h1 id="match-header">🛡️ AFC Phoenix vs Opponent</h1>
+            <button id="sim-btn" onclick="playFirstHalf()" style="background-color: #4caf50; padding: 15px 30px; font-size: 1.2em;">Kick Off (1st Half)</button>
+            
+            <div id="match-result"></div>
+            
+            <div id="halftime-controls" style="display: none; margin-top: 20px;">
+                <p><strong>Halftime Touchline Shout:</strong></p>
+                <button onclick="playSecondHalf('overload')" class="btn-risk">🔥 High-Press Overload</button>
+                <button onclick="playSecondHalf('defend')" class="btn-safe">🛡️ Sit Deeper</button>
+                <button onclick="playSecondHalf('maintain')" class="btn-neutral">⚖️ Maintain Plan</button>
+            </div>
+            <button id="next-week-btn" onclick="resetWeek()" style="display: none; background-color: #007acc; margin-top: 20px;">Return to Office</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
